@@ -25,19 +25,6 @@ namespace gdi_PointAndClick
             }
         }
 
-        private int CheckCollision(Rectangle newRectangle, int maxI)
-        {
-            for (int i = rectangles.Count - 1; i >= maxI; i--)
-            {
-                if (newRectangle.IntersectsWith(rectangles[i]))
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-
         private void FrmMain_MouseClick(object sender, MouseEventArgs e)
         {
             Point mausposition = e.Location;
