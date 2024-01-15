@@ -5,6 +5,7 @@ namespace gdi_PointAndClick
     public partial class FrmMain : Form
     {
         List<Rectangle> rectangles = new List<Rectangle>();
+        List<Color> rectanglesColors = new List<Color>();
         Random random = new Random();
 
         public FrmMain()
@@ -20,13 +21,9 @@ namespace gdi_PointAndClick
             int w = this.ClientSize.Width;
             int h = this.ClientSize.Height;
 
-            // Zeichenmittel
-            Brush b = new SolidBrush(Color.Lavender);
-
-
             for (int i = 0; i < rectangles.Count; i++)
             {
-                g.FillRectangle(b, rectangles[i]);
+                g.FillRectangle(new SolidBrush(rectanglesColors[i]), rectangles[i]);
             }
 
         }
@@ -36,7 +33,8 @@ namespace gdi_PointAndClick
             Point mausposition = e.Location;
             int size = random.Next(100) + 5;
 
-            Rectangle r = new Rectangle(mausposition.X - 20, mausposition.Y - 20, size, size);
+            Rectangle r = new Rectangle(mausposition.X - size / 2, mausposition.Y - size / 2, size, size);
+            rectanglesColors.Add(Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
 
             if (!rectangles.Contains(r))
             {
