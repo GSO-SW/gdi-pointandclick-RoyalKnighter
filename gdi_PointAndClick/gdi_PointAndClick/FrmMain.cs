@@ -18,30 +18,65 @@ namespace gdi_PointAndClick
         {
             // Hilfsvarablen
             Graphics g = e.Graphics;
-            int w = this.ClientSize.Width;
-            int h = this.ClientSize.Height;
 
             for (int i = 0; i < rectangles.Count; i++)
             {
                 g.FillRectangle(new SolidBrush(rectanglesColors[i]), rectangles[i]);
             }
-
         }
+
+        private int CheckCollision(Rectangle newRectangle, int maxI)
+        {
+            for (int i = rectangles.Count - 1; i >= maxI; i--)
+            {
+                if (newRectangle.IntersectsWith(rectangles[i]))
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
 
         private void FrmMain_MouseClick(object sender, MouseEventArgs e)
         {
             Point mausposition = e.Location;
             int size = random.Next(100) + 5;
 
-            Rectangle r = new Rectangle(mausposition.X - size / 2, mausposition.Y - size / 2, size, size);
-            rectanglesColors.Add(Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
+            Rectangle newRectangle = new Rectangle(mausposition.X - size / 2, mausposition.Y - size / 2, size, size);
 
-            if (!rectangles.Contains(r))
+            if (e.Button == MouseButtons.Left)
             {
-                rectangles.Add(r);  // Kurze Variante: rectangles.Add( new Rectangle(...)  );
-            }
+                bool add = true;
+                for (int i = rectangles.Count - 1; i >= 0; i--)
+                {
+                    if (rectangles[i].Contains(mausposition))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
 
-            Refresh();
+                if (add)
+                {
+                    rectanglesColors.Add(Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
+                    rectangles.Add(newRectangle);
+                    Refresh();
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                for (int i = rectangles.Count - 1; i >= 0; i--)
+                {
+                    if (rectangles[i].Contains(mausposition))
+                    {
+                        rectangles.RemoveAt(i);
+                        rectanglesColors.RemoveAt(i);
+                        Refresh();
+                        break;
+                    }
+                }
+            }
         }
 
         private void FrmMain_KeyDown(object sender, KeyEventArgs e)
